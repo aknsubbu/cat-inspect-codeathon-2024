@@ -1,9 +1,13 @@
-import { title } from "@/components/primitives";
+import React from "react";
 
-export default function DocsPage() {
+import CameraComponent from "@/components/CameraComponent";
+
+const Documentation = () => {
   return (
-    <div>
-      <h1 className={title()}>Docs</h1>
+    <div className="flex justify-center items-center">
+
     </div>
   );
-}
+};
+
+export default Documentation;

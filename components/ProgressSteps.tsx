@@ -22,7 +22,7 @@ const ProgressSteps: React.FC<ProgressStepsProps> = ({ stage }) => {
   const isMobile = 1; // Example threshold for mobile view
 
   return (
-    <div className="relative w-full mx-auto px-2 pb-5 m-5">
+    <div className="relative w-full px-2 pb-5 mx-5">
       <div className="relative flex justify-between mt-20">
         <div className="absolute bg-gray-200 h-1 w-full top-1/2 transform -translate-y-1/2 left-0" />
         <div

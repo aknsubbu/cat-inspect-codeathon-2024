@@ -12,9 +12,11 @@ import {
   ModalFooter,
   useDisclosure,
 } from "@nextui-org/modal";
+import { Autocomplete, AutocompleteItem } from "@nextui-org/react";
+
+import { places } from "../../components/places";
 
 import { title } from "@/components/primitives";
-import ProgressSteps from "@/components/ProgressSteps";
 
 interface Coordinates {
   latitude: number | null;
@@ -43,11 +45,9 @@ export default function BeginPage() {
     }
 
     function success(position: any) {
-      console.log("calling the function")
-      console.log(position);
       const latitude = position.coords.latitude;
       const longitude = position.coords.longitude;
-      
+
       setCoordinates({ latitude, longitude });
 
       console.log(`Latitude: ${latitude}, Longitude: ${longitude}`);
@@ -107,6 +107,18 @@ export default function BeginPage() {
           onClear={() => console.log("input cleared")}
           onValueChange={setVehicleID}
         />
+        <Autocomplete
+          className="max-w-lg p-2"
+          label="Select a location"
+          variant="bordered"
+        >
+          {places.map((item) => (
+            <AutocompleteItem key={item.value} value={item.value}>
+              {item.label}
+            </AutocompleteItem>
+          ))}
+        </Autocomplete>
+
         <Button
           className="max-w-lg p-5 m-5 "
           color="warning"
@@ -123,13 +135,6 @@ export default function BeginPage() {
 
   const handleProceedClick = async () => {
     try {
-      // const response = await axios.get(
-      //   process.env.BASE_URL + "fetchCustomerData",
-      // );
-
-      // setCustomerName(response.data.customerName);
-      // setTruckModel(response.data.truckModel);
-      // setInspectorName(response.data.inspectorName);
       getLocation();
       onOpen();
     } catch (error) {
@@ -139,27 +144,36 @@ export default function BeginPage() {
 
   const handleNextStage = async () => {
     try {
+      const headerData = {
+        inspectionId: "someInspectionId", // Replace with the actual inspection ID
+        inspectorName,
+        inspectionEmployeeId: name,
+        inspectionDate: new Date().toISOString().split("T")[0], // YYYY-MM-DD format
+        inspectionTime: new Date().toISOString().split("T")[1], // HH:MM:SS format
+        inspectionLocation: "Selected Location", // Replace with actual location
+        inspectionGeocoordinates: `${coordinates.latitude}, ${coordinates.longitude}`,
+        truckSerialNumber: vehicleID,
+        truckModel: truckModel,
+        serviceMeterHours: serviceHours,
+        inspectorSignature: "Signature", // Replace with actual signature if available
+        companyName: customerName,
+        catCustomerId: customerID,
+      };
+
       const response = await axios.post(
-        process.env.BASE_URL + "startInspection",
-        {
-          inspectorID: name,
-          customerID: customerID,
-          vehicleID: vehicleID,
-          serviceHours: serviceHours,
-          timestamp: new Date().toISOString(),
-        },
+        process.env.BASE_URL + "/api/header/post",
+        headerData,
       );
 
       setRedirect(response.data.redirect);
     } catch (error) {
-      console.error("Error:", error);
+      console.error("Error posting header data:", error);
     }
   };
 
   return (
     <div className="flex flex-col w-full">
-      <div>
-        <ProgressSteps stage={1} />
+      <div className="w-full">
         <PageTitle />
       </div>
       <div className="flex flex-col items-center justify-center gap-4 pt-10">

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Button } from "@nextui-org/button";
 
 interface TranslatorProps {
   setText: (text: string) => void;
@@ -14,6 +15,7 @@ const Translator: React.FC<TranslatorProps> = ({ setText }) => {
 
     if (!SpeechRecognition) {
       console.error("Speech recognition not supported in this browser.");
+
       return;
     }
 
@@ -25,6 +27,7 @@ const Translator: React.FC<TranslatorProps> = ({ setText }) => {
 
     recognition.onresult = (event) => {
       const transcript = event.results[0][0].transcript;
+
       console.log("Transcript: ", transcript);
       setText(transcript); // Update the state with the recognized text
     };
@@ -58,9 +61,11 @@ const Translator: React.FC<TranslatorProps> = ({ setText }) => {
   }
 
   return (
-    <button onClick={handleOnClick}>
-      {isRecording ? "Stop Recording" : "Start Recording"}
-    </button>
+    <div>
+      <Button color="warning"  variant="solid" onClick={handleOnClick} size="lg" className="p-5 ">
+        {isRecording ? "Stop Recording" : "Start Recording"}
+      </Button>
+    </div>
   );
 };
 

@@ -3,8 +3,6 @@ import "regenerator-runtime/runtime";
 import { Metadata, Viewport } from "next";
 import clsx from "clsx";
 
-import { DeepgramContextProvider } from "./context/DeepgramContextProvider";
-import { MicrophoneContextProvider } from "./context/MicrophoneContextProvider";
 import { Providers } from "./providers";
 
 import { siteConfig } from "@/config/site";
@@ -44,12 +42,10 @@ export default function RootLayout({
         )}
       >
         <Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>
-          <div className="relative flex flex-col h-screen">
+          <div className="relative flex flex-col h-screen pb-5">
             <Navbar />
-            <main className="container mx-auto  pt-16 px-6 flex-grow">
-              <MicrophoneContextProvider>
-                <DeepgramContextProvider>{children}</DeepgramContextProvider>
-              </MicrophoneContextProvider>
+            <main className="container mx-auto pt-16 px-6 flex-grow">
+              {children}
             </main>
           </div>
         </Providers>
