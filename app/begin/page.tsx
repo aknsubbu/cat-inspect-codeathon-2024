@@ -43,8 +43,12 @@ export default function BeginPage() {
     }
 
     function success(position: any) {
+      console.log("calling the function")
+      console.log(position);
       const latitude = position.coords.latitude;
       const longitude = position.coords.longitude;
+      
+      setCoordinates({ latitude, longitude });
 
       console.log(`Latitude: ${latitude}, Longitude: ${longitude}`);
     }
@@ -126,7 +130,6 @@ export default function BeginPage() {
       // setCustomerName(response.data.customerName);
       // setTruckModel(response.data.truckModel);
       // setInspectorName(response.data.inspectorName);
-
       getLocation();
       onOpen();
     } catch (error) {

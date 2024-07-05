@@ -1,7 +1,10 @@
 import "@/styles/globals.css";
+import "regenerator-runtime/runtime";
 import { Metadata, Viewport } from "next";
 import clsx from "clsx";
 
+import { DeepgramContextProvider } from "./context/DeepgramContextProvider";
+import { MicrophoneContextProvider } from "./context/MicrophoneContextProvider";
 import { Providers } from "./providers";
 
 import { siteConfig } from "@/config/site";
@@ -44,7 +47,9 @@ export default function RootLayout({
           <div className="relative flex flex-col h-screen">
             <Navbar />
             <main className="container mx-auto  pt-16 px-6 flex-grow">
-              {children}
+              <MicrophoneContextProvider>
+                <DeepgramContextProvider>{children}</DeepgramContextProvider>
+              </MicrophoneContextProvider>
             </main>
           </div>
         </Providers>
