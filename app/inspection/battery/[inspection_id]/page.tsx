@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { Button } from "@nextui-org/button";
 import axios from "axios";
+import { useRouter } from "next/navigation";
 
 import BatteryCard from "@/components/BatteryCard"; // Import the BatteryCard component
 
@@ -11,6 +12,7 @@ const BatteryInspection = ({
   params: { inspection_id: string };
 }) => {
   const inspectionID = params.inspection_id;
+  const router = useRouter();
 
   const [text, setText] = useState("");
   const [batteryData, setBatteryData] = useState({
@@ -42,6 +44,7 @@ const BatteryInspection = ({
         .post(process.env.BASE_URL + "/api/battery/post", batteryInfo)
         .then((res) => {
           console.log(res);
+          router.push(`/inspection/exterior/${inspectionID}`); // Redirect to the next page
           //! Add the redirect to the next page
         });
     } catch (error) {

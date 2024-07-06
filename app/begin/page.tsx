@@ -1,9 +1,10 @@
 "use client";
+import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { Input } from "@nextui-org/input";
 import { Link } from "@nextui-org/link";
 import { Button } from "@nextui-org/button";
-import axios from "axios";
+import axios from "axios"; 
 import {
   Modal,
   ModalContent,
@@ -24,6 +25,7 @@ interface Coordinates {
 }
 
 export default function BeginPage() {
+  const router = useRouter();
   const [name, setName] = useState("");
   const [customerID, setCustomerID] = useState("");
   const [vehicleID, setVehicleID] = useState("");
@@ -136,39 +138,111 @@ export default function BeginPage() {
   const handleProceedClick = async () => {
     try {
       getLocation();
+      // Fetch inspector name
+      await fetchInspectorName(name);
+      // Fetch company name
+      await fetchCompanyName(customerID);
+      // Fetch truck model
+      await fetchTruckModel(vehicleID);
       onOpen();
     } catch (error) {
       console.error("Error:", error);
     }
   };
 
-  const handleNextStage = async () => {
+  const fetchInspectorName = async (inspectorID: string) => {
     try {
-      const headerData = {
-        inspectionId: "someInspectionId", // Replace with the actual inspection ID
-        inspectorName,
-        inspectionEmployeeId: name,
-        inspectionDate: new Date().toISOString().split("T")[0], // YYYY-MM-DD format
-        inspectionTime: new Date().toISOString().split("T")[1], // HH:MM:SS format
-        inspectionLocation: "Selected Location", // Replace with actual location
-        inspectionGeocoordinates: `${coordinates.latitude}, ${coordinates.longitude}`,
-        truckSerialNumber: vehicleID,
-        truckModel: truckModel,
-        serviceMeterHours: serviceHours,
-        inspectorSignature: "Signature", // Replace with actual signature if available
-        companyName: customerName,
-        catCustomerId: customerID,
-      };
-
-      const response = await axios.post(
-        process.env.BASE_URL + "/api/header/post",
-        headerData,
+      const response = await axios.get(
+        `https://cat.akashshanmugaraj.com/api/inspectorname?inspector_id=${inspectorID}`,
       );
 
-      setRedirect(response.data.redirect);
+      setInspectorName(response.data.name);
+    } catch (error) {
+      console.error("Error fetching inspector name:", error);
+    }
+  };
+
+  const fetchCompanyName = async (customerID: string) => {
+    try {
+      const response = await axios.get(
+         `https://cat.akashshanmugaraj.com/api/companyname?customer_id=${customerID}`,
+      );
+
+      setCustomerName(response.data.company);
+    } catch (error) {
+      console.error("Error fetching company name:", error);
+    }
+  };
+
+  const fetchTruckModel = async (truckID: string) => {
+    try {
+      const response = await axios.get(
+        `https://cat.akashshanmugaraj.com/api/truckmodel?truck_id=${truckID}`,
+      );
+
+      setTruckModel(response.data.model);
+    } catch (error) {
+      console.error("Error fetching truck model:", error);
+    }
+  };
+
+  const handleNextStage = async () => {
+    try {
+      // Check inspection ID existence
+      const inspectionID = generateUUID();
+      const exists = await checkInspectionID(inspectionID);
+
+      setRedirect(`/inspection/tires/${inspectionID}`);
+
+      if (!exists) {
+        const headerData = {
+          inspectionId: inspectionID,
+          inspectorName,
+          inspectionEmployeeId: name,
+          inspectionDate: new Date().toISOString().split("T")[0],
+          inspectionTime: new Date().toISOString().split("T")[1],
+          inspectionLocation: "Selected Location",
+          inspectionGeocoordinates: `${coordinates.latitude}, ${coordinates.longitude}`,
+          truckSerialNumber: vehicleID,
+          truckModel,
+          serviceMeterHours: serviceHours,
+          inspectorSignature: "Signature",
+          companyName: customerName,
+          catCustomerId: customerID,
+        };
+
+        const response = await axios
+          .post("/api/header/post", headerData)
+          .then((res) => {
+            console.log(res);
+            router.push(redirect);
+          });
+      } else {
+        console.error("Generated inspection ID already exists.");
+      }
     } catch (error) {
       console.error("Error posting header data:", error);
     }
+  };
+
+  const checkInspectionID = async (inspectionID: string) => {
+    try {
+      const response = await axios.get(
+        process.env.BASE_URL +
+          `/api/checkinspectionid?inspection_id=${inspectionID}`,
+      );
+
+      return response.data.exists === "true";
+    } catch (error) {
+      console.error("Error checking inspection ID:", error);
+
+      return false;
+    }
+  };
+
+  const generateUUID = () => {
+    // This is a simple UUID generation function, replace with your preferred method
+    return Math.random().toString(36).substring(2) + Date.now().toString(36);
   };
 
   return (

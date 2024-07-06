@@ -2,11 +2,14 @@
 import React, { useState } from "react";
 import { Button } from "@nextui-org/button";
 import axios from "axios";
+import { useRouter } from "next/navigation";
 
 import TireCard from "@/components/TireCard";
 
 const TiresInspection = ({ params }: { params: { inspection_id: string } }) => {
   const inspectionID = params.inspection_id;
+
+  const router = useRouter();
 
   const [LFtext, setLFText] = useState("");
   const [RFtext, setRFText] = useState("");
@@ -58,6 +61,7 @@ const TiresInspection = ({ params }: { params: { inspection_id: string } }) => {
         .then((res) => {
           console.log(res);
           //! Add the redirect to the next page
+          router.push(`/inspection/battery/${inspectionID}`);
         });
     } catch (error) {
       console.error("Error posting tire data:", error);
