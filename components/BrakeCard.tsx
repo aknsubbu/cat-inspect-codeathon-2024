@@ -56,25 +56,24 @@ const BrakeCard: React.FC<BrakeCardProps> = ({
 
   useEffect(() => {
     function extractBrakeFluidLevel(text: string) {
-      const regex = /brake\s+fluid\s+level\s*:\s*(good|ok|low)/i;
+      const regex = /brake\s+fluid\s+level\s+is\s*(good|ok|low)/i;
       const match = regex.exec(text);
       return match ? match[1].toLowerCase() : null;
     }
 
     function extractBrakeCondition(text: string, position: string) {
-      const regex = new RegExp(`brake\\s+condition\\s+for\\s+${position}\\s+-\\s+(good|ok|needs\\s+replacement)`, "i");
-      const match = regex.exec(text);
+      const regex = new RegExp(`brake\\s+condition\\s+for\\s+${position}\\s+is\\s+(good|ok|needs\\s+replacement)`, "i");      const match = regex.exec(text);
       return match ? match[1].toLowerCase() : null;
     }
 
     function extractEmergencyBrake(text: string) {
-      const regex = /emergency\s+brake\s*:\s*(good|ok|low)/i;
+      const regex = /emergency\s+brake\s+is\s*:\s*(good|ok|low)/i;
       const match = regex.exec(text);
       return match ? match[1].toLowerCase() : null;
     }
 
     function extractOverallSummary(text: string) {
-      const regex = /brake\s+overall\s+summary\s*:\s*(.{1,1000})/i;
+      const regex = /brake\s+overall\s+summary\s+is\s*(.{1,1000})/i;
       const match = regex.exec(text);
       return match ? match[1].trim() : "";
     }

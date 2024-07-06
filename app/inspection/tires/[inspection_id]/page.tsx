@@ -173,11 +173,11 @@ const TiresInspection = ({ params }: { params: { inspection_id: string } }) => {
             <p>Right Front</p>
           </div>
           <div className="flex flex-col items-center">
-            <img alt="Right Front Tire" src={RFImage} />
+            <img alt="Right Front Tire" src={LRImage} />
             <p>Right Front</p>
           </div>
           <div className="flex flex-col items-center">
-            <img alt="Right Front Tire" src={RFImage} />
+            <img alt="Right Front Tire" src={RRImage} />
             <p>Right Front</p>
           </div>
         </div>

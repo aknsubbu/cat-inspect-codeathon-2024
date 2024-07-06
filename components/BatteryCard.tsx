@@ -63,13 +63,13 @@ const BatteryCard: React.FC<BatteryCardProps> = ({
     }
 
     function extractBatteryReplacementDate(text: string) {
-      const regex = /battery\s+replacement\s+date\s+is\s+(\d{2}\/\d{2}\/\d{4})/i;
+      const regex = /date\s+is\s+(\d{1,2}(st|nd|rd|th)?\s+\w+\s+\d{4})/i;
       const match = regex.exec(text);
       return match ? match[1] : null;
     }
 
     function extractBatteryVoltage(text: string) {
-      const regex = /battery\s+voltage\s+is\s+(\d+V)/i;
+      const regex = /battery\s+voltage\s+is\s+(\d+)\s*v(?:olts)?/i;
       const match = regex.exec(text);
       return match ? match[1] : null;
     }
@@ -81,13 +81,13 @@ const BatteryCard: React.FC<BatteryCardProps> = ({
     }
 
     function extractBatteryCondition(text: string) {
-      const regex = /battery\s+condition\s+is\s+(yes|no)/i;
+      const regex = /battery\s+condition\s+is\s+(good|ok|bad)/i;
       const match = regex.exec(text);
       return match ? match[1].toLowerCase() : null;
     }
 
     function extractBatteryLeak(text: string) {
-      const regex = /battery\s+leak\s+or\s+rust\s+is\s+(yes|no)/i;
+      const regex = /battery\s+leak\s+or\s+rust\s+is\s+(present|absent)/i;
       const match = regex.exec(text);
       return match ? match[1].toLowerCase() : null;
     }
