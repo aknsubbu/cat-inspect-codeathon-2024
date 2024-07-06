@@ -6,7 +6,11 @@ import { useRouter } from "next/navigation";
 
 import BrakeCard from "@/components/BrakeCard";
 
-const BrakesInspection = ({ params }: { params: { inspection_id: string } }) => {
+const BrakesInspection = ({
+  params,
+}: {
+  params: { inspection_id: string };
+}) => {
   const inspectionID = params.inspection_id;
   const router = useRouter();
 
@@ -47,19 +51,25 @@ const BrakesInspection = ({ params }: { params: { inspection_id: string } }) => 
   const [LRImage, setLRImage] = useState("");
   const [RRImage, setRRImage] = useState("");
 
+  const LFURL = "-x-";
+  const RFURL = "-x-";
+  const LRURL = "-x-";
+  const RRURL = "-x-";
+
   const handleSubmit = async () => {
     const brakeData = {
       inspectionId: inspectionID,
-      brakeFluidLevelLeftFront: LFData.brakeFluidLevel,
-      brakeFluidLevelRightFront: RFData.brakeFluidLevel,
-      frontBrakeConditionLeftFront: LFData.frontBrakeCondition,
-      frontBrakeConditionRightFront: RFData.frontBrakeCondition,
-      rearBrakeConditionLeftRear: LRData.rearBrakeCondition,
-      rearBrakeConditionRightRear: RRData.rearBrakeCondition,
-      emergencyBrakeLeftRear: LRData.emergencyBrake,
-      emergencyBrakeRightRear: RRData.emergencyBrake,
+      brakeFluidLevelLeftFront: LFData.brakeFluidLevel ?? "good",
+      brakeFluidLevelRightFront: RFData.brakeFluidLevel ?? "good",
+      frontBrakeConditionLeftFront: LFData.frontBrakeCondition ?? "good",
+      frontBrakeConditionRightFront:
+        RFData.frontBrakeCondition ?? "needs replacement",
+      rearBrakeConditionLeftRear: LRData.rearBrakeCondition ?? "good",
+      rearBrakeConditionRightRear: RRData.rearBrakeCondition ?? "good",
+      emergencyBrakeLeftRear: LRData.emergencyBrake ?? "good",
+      emergencyBrakeRightRear: RRData.emergencyBrake ?? "good",
       brakeOverallSummary: `${LFData.brakeOverallSummary}, ${RFData.brakeOverallSummary}, ${LRData.brakeOverallSummary}, ${RRData.brakeOverallSummary}`,
-      attachedImages: [LFImage, RFImage, LRImage, RRImage],
+      attachedImages: [LFURL, RFURL, LRURL, RRURL],
     };
 
     try {
@@ -77,7 +87,10 @@ const BrakesInspection = ({ params }: { params: { inspection_id: string } }) => 
 
   return (
     <div className="w-full pt-10 flex flex-col items-center">
-      <p>{inspectionID}</p>
+      <div className="flex flex-row gap-2 items-center justify-center ">
+        <h1 className="text-xl text-bold">Inspection ID:</h1>
+        <p>{inspectionID}</p>
+      </div>
       <BrakeCard
         placement="Left Front"
         setData={setLFData}

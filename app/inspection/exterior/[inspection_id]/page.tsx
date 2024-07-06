@@ -29,10 +29,10 @@ const ExteriorInspection = ({
   const handleSubmit = async () => {
     const exteriorData = {
       inspectionId: inspectionID,
-      rustOrDamage: rustOrDamageData.rustOrDamage,
-      damageExplanation: rustOrDamageData.damageExplanation,
-      oilLeakSuspension: rustOrDamageData.oilLeakSuspension,
-      overallSummary,
+      rustOrDamage: rustOrDamageData.rustOrDamage ?? 'yes',
+      damageExplanation: rustOrDamageData.damageExplanation ?? "Rust and damage found",
+      oilLeakSuspension: rustOrDamageData.oilLeakSuspension ?? 'yes',
+      overallSummary: overallSummary ?? "Some issues found",
       attachedImages: [rustOrDamageImage, oilLeakImage],
     };
 
@@ -51,7 +51,12 @@ const ExteriorInspection = ({
 
   return (
     <div className="w-full pt-10 flex flex-col items-center">
-      <p>{inspectionID}</p>
+      <div className="flex flex-row gap-2 items-center justify-center ">
+        <h1 className="text-xl text-bold">
+          Inspection ID: 
+        </h1>
+        <p>{inspectionID}</p>
+      </div>
       <ExteriorCard
         placement="Rust, Dent or Damage to Exterior"
         setData={setRustOrDamageData}

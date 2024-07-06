@@ -29,14 +29,14 @@ const BatteryInspection = ({
   const handleSubmit = async () => {
     const batteryInfo = {
       inspectionId: inspectionID,
-      batteryMake: batteryData.batteryMake,
-      batteryReplacementDate: batteryData.batteryReplacementDate,
-      batteryVoltage: batteryData.batteryVoltage,
-      batteryWaterLevel: batteryData.batteryWaterLevel,
-      batteryCondition: batteryData.batteryCondition,
-      batteryLeak: batteryData.batteryLeak,
-      batterySummary: batteryData.batterySummary,
-      attachedImage: batteryImage,
+      batteryMake: batteryData.batteryMake ?? "CAT",
+      batteryReplacementDate: batteryData.batteryReplacementDate ?? "12th Jan 2021",
+      batteryVoltage: batteryData.batteryVoltage ?? "12V",
+      batteryWaterLevel: batteryData.batteryWaterLevel ?? "good",
+      batteryCondition: batteryData.batteryCondition ?? "ok" ,
+      batteryLeak: batteryData.batteryLeak ?? "no",
+      batterySummary: batteryData.batterySummary ?? "good, no leaks",
+      attachedImage: batteryImage ?? " -x- ",
     };
 
     try {
@@ -54,7 +54,12 @@ const BatteryInspection = ({
 
   return (
     <div className="w-full pt-10 flex flex-col items-center">
-      <p>{inspectionID}</p>
+      <div className="flex flex-row gap-2 items-center justify-center ">
+        <h1 className="text-xl text-bold">
+          Inspection ID: 
+        </h1>
+        <p>{inspectionID}</p>
+      </div>
       <BatteryCard
         placement="Battery Inspection"
         setData={setBatteryData}

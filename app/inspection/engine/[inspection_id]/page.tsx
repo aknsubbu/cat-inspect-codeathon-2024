@@ -24,14 +24,14 @@ const EngineInspection = ({ params }: { params: { inspection_id: string } }) => 
   const handleSubmit = async () => {
     const engineInspectionData = {
       inspectionId: inspectionID,
-      rustDamage: engineData.rustDamage,
-      rustDamageNotes: engineData.rustDamageNotes,
-      engineOilCondition: engineData.engineOilCondition,
-      engineOilColor: engineData.engineOilColor,
-      brakeFluidCondition: engineData.brakeFluidCondition,
-      brakeFluidColor: engineData.brakeFluidColor,
-      oilLeak: engineData.oilLeak,
-      summary: engineData.summary,
+      rustDamage: engineData.rustDamage ?? 'yes',
+      rustDamageNotes: engineData.rustDamageNotes ?? 'yes,damage to part',
+      engineOilCondition: engineData.engineOilCondition ?? "good",
+      engineOilColor: engineData.engineOilColor ?? "clean",
+      brakeFluidCondition: engineData.brakeFluidCondition ?? "good",
+      brakeFluidColor: engineData.brakeFluidColor ?? "brown",
+      oilLeak: engineData.oilLeak ?? 'yes',
+      summary: engineData.summary ?? "some issues",
       attachedImage: engineImage,
     };
 
@@ -49,7 +49,12 @@ const EngineInspection = ({ params }: { params: { inspection_id: string } }) => 
 
   return (
     <div className="w-full pt-10 flex flex-col items-center">
-      <p>{inspectionID}</p>
+      <div className="flex flex-row gap-2 items-center justify-center ">
+        <h1 className="text-xl text-bold">
+          Inspection ID: 
+        </h1>
+        <p>{inspectionID}</p>
+      </div>
       <EngineCard
         placement="Engine Inspection"
         setData={setEngineData}

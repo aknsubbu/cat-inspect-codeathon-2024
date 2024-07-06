@@ -87,35 +87,42 @@ const TiresInspection = ({ params }: { params: { inspection_id: string } }) => {
       // Upload images and get their URLs
       const contentType = "image/jpeg";
 
-      const LFfilename = "LFImage.jpeg";
-      const RFfilename = "RFImage.jpeg";
-      const LRfilename = "LRImage.jpeg";
-      const RRfilename = "RRImage.jpeg";
+      // const LFfilename = "LFImage.jpeg";
+      // const RFfilename = "RFImage.jpeg";
+      // const LRfilename = "LRImage.jpeg";
+      // const RRfilename = "RRImage.jpeg";
 
-      saveBase64ImageToFile(LFImage, LFfilename);
-      saveBase64ImageToFile(RFImage, RFfilename);
-      saveBase64ImageToFile(LRImage, LRfilename);
-      saveBase64ImageToFile(RRImage, RRfilename);
+      // saveBase64ImageToFile(LFImage, LFfilename);
+      // saveBase64ImageToFile(RFImage, RFfilename);
+      // saveBase64ImageToFile(LRImage, LRfilename);
+      // saveBase64ImageToFile(RRImage, RRfilename);
 
-      const LFImageURL = await uploadImage(LFfilename, "Tire");
-      const RFImageURL = await uploadImage(RFfilename, "Tire");
-      const LRImageURL = await uploadImage(LRfilename, "Tire");
-      const RRImageURL = await uploadImage(RRfilename, "Tire");
+      // const LFImageURL = await uploadImage(LFfilename, "Tire");
+      // const RFImageURL = await uploadImage(RFfilename, "Tire");
+      // const LRImageURL = await uploadImage(LRfilename, "Tire");
+      // const RRImageURL = await uploadImage(RRfilename, "Tire");
+      const LFImageURL = "LFImage";
+      const RFImageURL = "RFImage";
+      const LRImageURL = "LRImage";
+      const RRImageURL = "RRImage";
 
       // Prepare tire data with the uploaded image URLs
       const tireData = {
         inspectionId: inspectionID,
-        tirePressureLeftFront: LFData.tirePressure,
-        tirePressureRightFront: RFData.tirePressure,
-        tireConditionLeftFront: LFData.tireCondition,
-        tireConditionRightFront: RFData.tireCondition,
-        tirePressureLeftRear: LRData.tirePressure,
-        tirePressureRightRear: RRData.tirePressure,
-        tireConditionLeftRear: LRData.tireCondition,
-        tireConditionRightRear: RRData.tireCondition,
+        tirePressureLeftFront: LFData.tirePressure ?? "25",
+        tirePressureRightFront: RFData.tirePressure ?? "25",
+        tireConditionLeftFront: LFData.tireCondition ?? "Good",
+        tireConditionRightFront: RFData.tireCondition ?? "Good",
+        tirePressureLeftRear: LRData.tirePressure ?? "25",
+        tirePressureRightRear: RRData.tirePressure ?? "25",
+        tireConditionLeftRear: LRData.tireCondition ?? "Good",
+        tireConditionRightRear: RRData.tireCondition ?? "Good",
         tireOverallSummary: `${LFData.inspectorNotes}, ${RFData.inspectorNotes}, ${LRData.inspectorNotes}, ${RRData.inspectorNotes}`,
         attachedImages: [LFImageURL, RFImageURL, LRImageURL, RRImageURL],
       };
+
+      console.log("Handle Clicked");
+      console.log(tireData);
 
       // Post tire data with the image URLs
       const response = await axios.post(
@@ -132,7 +139,10 @@ const TiresInspection = ({ params }: { params: { inspection_id: string } }) => {
 
   return (
     <div className="w-full pt-10 flex flex-col items-center">
-      <p>{inspectionID}</p>
+      <div className="flex flex-row gap-2 items-center justify-center ">
+        <h1 className="text-xl text-bold">Inspection ID:</h1>
+        <p>{inspectionID}</p>
+      </div>
       <TireCard
         placement="Left Front"
         setData={setLFData}
