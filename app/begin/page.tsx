@@ -153,7 +153,7 @@ export default function BeginPage() {
   const fetchInspectorName = async (inspectorID: string) => {
     try {
       const response = await axios.get(
-        `https://cat.akashshanmugaraj.com/api/sampleinfo/inspectorname?inspector_id=${inspectorID}`,
+        `http://localhost:8080/api/sampleinfo/inspectorname?inspector_id=${inspectorID}`,
       );
 
       setInspectorName(response.data.name);
@@ -165,10 +165,10 @@ export default function BeginPage() {
   const fetchCompanyName = async (customerID: string) => {
     try {
       const response = await axios.get(
-         `https://cat.akashshanmugaraj.com/api/sampleinfo/companyname?customer_id=${customerID}`,
+         `http://localhost:8080/api/sampleinfo/companyname?customer_id=${customerID}`,
       );
-
-      setCustomerName(response.data.company);
+      console.log(response.data)
+      setCustomerName(response.data['company_name']);
     } catch (error) {
       console.error("Error fetching company name:", error);
     }
@@ -177,10 +177,10 @@ export default function BeginPage() {
   const fetchTruckModel = async (truckID: string) => {
     try {
       const response = await axios.get(
-        `https://cat.akashshanmugaraj.com/api/sampleinfo/truckmodel?truck_id=${truckID}`,
+        `http://localhost:8080/api/sampleinfo/truckmodel?truck_id=${truckID}`,
       );
-
-      setTruckModel(response.data.model);
+      console.log(response.data)
+      setTruckModel(response.data['truck-model']);
     } catch (error) {
       console.error("Error fetching truck model:", error);
     }
@@ -212,7 +212,7 @@ export default function BeginPage() {
         };
 
         const response = await axios
-          .post("/api/header/post", headerData)
+          .post("http://localhost:8080/api/header/post", headerData)
           .then((res) => {
             console.log(res);
             router.push(redirect);
@@ -228,8 +228,7 @@ export default function BeginPage() {
   const checkInspectionID = async (inspectionID: string) => {
     try {
       const response = await axios.get(
-        process.env.BASE_URL +
-          `/api/checkinspectionid?inspection_id=${inspectionID}`,
+          `http://localhost:8080/api/sampleinfo/checkinspectionid?inspection_id=${inspectionID}`,
       );
 
       return response.data.exists === "true";
