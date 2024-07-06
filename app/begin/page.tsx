@@ -77,36 +77,30 @@ export default function BeginPage() {
     return (
       <div className="gap-5">
         <Input
-          isClearable
           isRequired
           className="max-w-lg p-2"
           label="Inspector ID"
           placeholder="Enter your Inspector ID"
           value={name}
           variant="bordered"
-          onClear={() => console.log("input cleared")}
           onValueChange={setName}
         />
         <Input
-          isClearable
           isRequired
           className="max-w-lg p-2"
           label="Customer ID"
           placeholder="Enter your Customer ID"
           value={customerID}
           variant="bordered"
-          onClear={() => console.log("input cleared")}
           onValueChange={setCustomerID}
         />
         <Input
-          isClearable
           isRequired
           className="max-w-lg p-2"
           label="Vehicle ID"
           placeholder="Enter your Vehicle ID"
           value={vehicleID}
           variant="bordered"
-          onClear={() => console.log("input cleared")}
           onValueChange={setVehicleID}
         />
         <Autocomplete

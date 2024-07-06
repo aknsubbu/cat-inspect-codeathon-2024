@@ -1,3 +1,5 @@
+"use client";
+import React,{useEffect,useState} from 'react'
 import {
   Navbar as NextUINavbar,
   NavbarContent,
@@ -9,12 +11,18 @@ import {
 } from "@nextui-org/navbar";
 import { Link } from "@nextui-org/link";
 import NextLink from "next/link";
+import { UserButton, SignInButton } from "@clerk/nextjs";
+
+import { useUser } from "@clerk/clerk-react";
+
 
 import { siteConfig } from "@/config/site";
 import { ThemeSwitch } from "@/components/theme-switch";
 import { GithubIcon, Logo } from "@/components/icons";
 
 export const Navbar = () => {
+  const { isSignedIn, user, isLoaded } = useUser();
+
   return (
     <NextUINavbar
       isBlurred
@@ -38,27 +46,12 @@ export const Navbar = () => {
         className="hidden sm:flex basis-1/5 sm:basis-full"
         justify="end"
       >
-        {/* <ul className="hidden lg:flex gap-4 justify-start ml-2">
-          {siteConfig.navItems.map((item) => (
-            <NavbarItem key={item.href}>
-              <NextLink
-                className={clsx(
-                  linkStyles({ color: "foreground" }),
-                  "data-[active=true]:text-primary data-[active=true]:font-medium",
-                )}
-                color="foreground"
-                href={item.href}
-              >
-                {item.label}
-              </NextLink>
-            </NavbarItem>
-          ))}
-        </ul> */}
         <NavbarItem className="hidden sm:flex gap-2">
           <Link isExternal aria-label="Github" href={siteConfig.links.github}>
             <GithubIcon className="text-default-500" />
           </Link>
           <ThemeSwitch />
+          {isSignedIn ? <UserButton /> : <SignInButton />}
         </NavbarItem>
       </NavbarContent>
 
