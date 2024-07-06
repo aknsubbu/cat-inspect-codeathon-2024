@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Button } from "@nextui-org/button";
 
 interface TranslatorProps {
@@ -6,63 +6,107 @@ interface TranslatorProps {
 }
 
 const Translator: React.FC<TranslatorProps> = ({ setText }) => {
-  const [isRecording, setIsRecording] = useState(false); // State to track recording status
-  let recognition: SpeechRecognition | null = null; // Declare recognition outside of function to keep reference
+  const [isRecording, setIsRecording] = useState(false);
+  const recognitionRef = useRef<SpeechRecognition | null>(null);
 
-  function startRecognition() {
+  useEffect(() => {
+    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+      if (recognitionRef.current) {
+        recognitionRef.current.stop();
+      }
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+      if (recognitionRef.current) {
+        recognitionRef.current.stop();
+      }
+    };
+  }, []);
+
+  const startRecognition = () => {
     const SpeechRecognition =
       window.SpeechRecognition || window.webkitSpeechRecognition;
 
     if (!SpeechRecognition) {
       console.error("Speech recognition not supported in this browser.");
-
       return;
     }
 
-    recognition = new SpeechRecognition();
+    recognitionRef.current = new SpeechRecognition();
+    recognitionRef.current.continuous = true;
+    recognitionRef.current.interimResults = false;
+    recognitionRef.current.lang = "en-US"; // Set language if needed
 
-    recognition.onstart = () => {
+    recognitionRef.current.onstart = () => {
       console.log("Listening...");
     };
 
-    recognition.onresult = (event) => {
+    recognitionRef.current.onresult = (event) => {
       const transcript = event.results[0][0].transcript;
-
       console.log("Transcript: ", transcript);
-      setText(transcript); // Update the state with the recognized text
+      setText(transcript);
     };
 
-    recognition.onerror = (event) => {
+    recognitionRef.current.onerror = (event) => {
       console.error("Speech recognition error detected: " + event.error);
+      if (event.error === "not-allowed") {
+        console.error("Microphone access denied.");
+      }
     };
 
-    recognition.onend = () => {
+    recognitionRef.current.onend = () => {
       console.log("Speech recognition service disconnected");
-      setIsRecording(false); // Update state when recognition ends
+      setIsRecording(false);
     };
 
-    recognition.start();
-    setIsRecording(true); // Update state when recognition starts
-  }
+    recognitionRef.current.onaudioend = () => {
+      console.log("Audio capturing ended");
+    };
 
-  function stopRecognition() {
-    if (recognition) {
-      recognition.stop();
+    recognitionRef.current.onsoundend = () => {
+      console.log("Sound capturing ended");
+    };
+
+    recognitionRef.current.onspeechend = () => {
+      console.log("Speech capturing ended");
+    };
+
+    recognitionRef.current.onnomatch = () => {
+      console.log("No matching speech recognized");
+    };
+
+    recognitionRef.current.start();
+    setIsRecording(true);
+  };
+
+  const stopRecognition = () => {
+    if (recognitionRef.current) {
+      recognitionRef.current.stop();
+      recognitionRef.current = null;
     }
-    setIsRecording(false); // Update state when recognition is manually stopped
-  }
+    setIsRecording(false);
+  };
 
-  function handleOnClick() {
+  const handleOnClick = () => {
     if (isRecording) {
       stopRecognition();
     } else {
       startRecognition();
     }
-  }
+  };
 
   return (
     <div>
-      <Button color="warning"  variant="solid" onClick={handleOnClick} size="lg" className="p-5 ">
+      <Button
+        color="warning"
+        variant="solid"
+        onClick={handleOnClick}
+        size="lg"
+        className="p-5"
+      >
         {isRecording ? "Stop Recording" : "Start Recording"}
       </Button>
     </div>

@@ -27,7 +27,11 @@ interface TireCardProps {
   text: string;
   setText: (text: string) => void;
   setImage: (image: string | null) => void;
-  setData: (data: { tirePressure: string; tireCondition: string; inspectorNotes: string }) => void;
+  setData: (data: {
+    tirePressure: string;
+    tireCondition: string;
+    inspectorNotes: string;
+  }) => void;
   [key: string]: any; // Add this line to allow additional props
 }
 
@@ -45,31 +49,35 @@ const TireCard: React.FC<TireCardProps> = ({
 
   useEffect(() => {
     function extractNumberBeforePsi(text: string) {
-        const regex = /(\d+)\s*(?=psi|PSI)/i;
-        const match = regex.exec(text);
-        return match ? parseInt(match[1]) : null;
-      }
-      
-      function extractTireCondition(text: string) {
-        const regex = /(?:tyre|tire)\s+condition\s+is\s+(good|ok|needs\s+replacement)/i;
-        const match = regex.exec(text);
-        return match ? match[1].toLowerCase() : null; // Convert to lower case for consistency
-      }
-      
-      function extractInspectorNotes(text: string) {
-        const regex = /inspector\s+(?:specific\s+)?notes\s+are\s*(.*)/i;
-        const match = regex.exec(text);
-        return match ? match[1].trim() : null;
-      }
+      const regex = /(\d+)\s*(?=psi|PSI)/i;
+      const match = regex.exec(text);
+
+      return match ? parseInt(match[1]) : null;
+    }
+
+    function extractTireCondition(text: string) {
+      const regex =
+        /(?:tyre|tire)\s+condition\s+is\s+(good|bad|ok|needs\s+replacement)/i;
+      const match = regex.exec(text);
+
+      return match ? match[1].toLowerCase() : null; // Convert to lower case for consistency
+    }
+
+    function extractInspectorNotes(text: string) {
+      const regex = /inspector\s+(?:specific\s+)?notes\s+are\s*(.*)/i;
+      const match = regex.exec(text);
+
+      return match ? match[1].trim() : null;
+    }
     if (text) {
       const tirePressure = extractNumberBeforePsi(text)?.toString() ?? null;
       const tireCondition = extractTireCondition(text);
       const inspectorNotes = extractInspectorNotes(text);
-      
+
       setTirePressure(tirePressure);
       setTireCondition(tireCondition);
       setInspectorNotes(inspectorNotes);
-      
+
       setData({
         tirePressure: tirePressure ?? "",
         tireCondition: tireCondition ?? "",
@@ -124,10 +132,10 @@ const TireCard: React.FC<TireCardProps> = ({
             onValueChange={setInspectorNotes}
           />
           <Button
+            className="mt-4"
             color="success"
             variant="light"
             onPress={onOpen}
-            className="mt-4"
           >
             Capture Image
           </Button>
@@ -135,7 +143,7 @@ const TireCard: React.FC<TireCardProps> = ({
       </Card>
       <Modal
         backdrop="blur"
-        className="flex justify-center items-center"
+        className="flex flex-col justify-center items-center w-full h-full"
         isOpen={isOpen}
         onClose={onClose}
       >
@@ -143,17 +151,12 @@ const TireCard: React.FC<TireCardProps> = ({
           <ModalHeader className="flex flex-col gap-1">
             Image Capture
           </ModalHeader>
-          <ModalBody className="flex justify-center items-center">
+          <ModalBody className="flex justify-center items-center max-w-lg max-h-lg">
             <CameraComponent setImage={setImage} />
           </ModalBody>
 
-          <ModalFooter>
-            <Link
-              isBlock
-              color="success"
-              underline="hover"
-              onClick={onClose}
-            >
+          <ModalFooter className="w-full">
+            <Link isBlock color="success" underline="hover" onClick={onClose}>
               Confirm Image
             </Link>
             <Button color="danger" variant="light" onPress={onClose}>

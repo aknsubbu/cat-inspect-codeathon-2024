@@ -76,7 +76,7 @@ const EngineCard: React.FC<EngineCardProps> = ({
       setRustDamageNotes(
         extractTextFromPattern(
           text,
-          /Explanation\s+in\s+notes\s+and\s+attach\s+images\s+(.*)/i,
+          /rust notes(.*)/s
         ),
       );
       setEngineOilCondition(

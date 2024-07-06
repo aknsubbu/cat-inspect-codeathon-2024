@@ -153,7 +153,7 @@ export default function BeginPage() {
   const fetchInspectorName = async (inspectorID: string) => {
     try {
       const response = await axios.get(
-        `https://cat.akashshanmugaraj.com/api/inspectorname?inspector_id=${inspectorID}`,
+        `https://cat.akashshanmugaraj.com/api/sampleinfo/inspectorname?inspector_id=${inspectorID}`,
       );
 
       setInspectorName(response.data.name);
@@ -165,7 +165,7 @@ export default function BeginPage() {
   const fetchCompanyName = async (customerID: string) => {
     try {
       const response = await axios.get(
-         `https://cat.akashshanmugaraj.com/api/companyname?customer_id=${customerID}`,
+         `https://cat.akashshanmugaraj.com/api/sampleinfo/companyname?customer_id=${customerID}`,
       );
 
       setCustomerName(response.data.company);
@@ -177,7 +177,7 @@ export default function BeginPage() {
   const fetchTruckModel = async (truckID: string) => {
     try {
       const response = await axios.get(
-        `https://cat.akashshanmugaraj.com/api/truckmodel?truck_id=${truckID}`,
+        `https://cat.akashshanmugaraj.com/api/sampleinfo/truckmodel?truck_id=${truckID}`,
       );
 
       setTruckModel(response.data.model);

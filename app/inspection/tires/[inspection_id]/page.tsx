@@ -40,29 +40,91 @@ const TiresInspection = ({ params }: { params: { inspection_id: string } }) => {
   const [LRImage, setLRImage] = useState("");
   const [RRImage, setRRImage] = useState("");
 
-  const handleSubmit = async () => {
-    const tireData = {
-      inspectionId: inspectionID,
-      tirePressureLeftFront: LFData.tirePressure,
-      tirePressureRightFront: RFData.tirePressure,
-      tireConditionLeftFront: LFData.tireCondition,
-      tireConditionRightFront: RFData.tireCondition,
-      tirePressureLeftRear: LRData.tirePressure,
-      tirePressureRightRear: RRData.tirePressure,
-      tireConditionLeftRear: LRData.tireCondition,
-      tireConditionRightRear: RRData.tireCondition,
-      tireOverallSummary: `${LFData.inspectorNotes}, ${RFData.inspectorNotes}, ${LRData.inspectorNotes}, ${RRData.inspectorNotes}`,
-      attachedImages: [LFImage, RFImage, LRImage, RRImage],
-    };
+  function saveBase64ImageToFile(base64String: any, filename: any) {
+    // Remove data:image/jpeg;base64, from base64 string
+    const base64Data = base64String.replace(/^data:image\/jpeg;base64,/, "");
+
+    // Decode base64 to binary
+    const binaryData = Buffer.from(base64Data, "base64");
+
+    // Write binary data to a file
+    // fs.writeFile(filename, binaryData, "binary", (err) => {
+    //   if (err) throw err;
+    //   console.log(`Image saved as ${filename}`);
+    // });
+  }
+
+  const uploadImage = async (filePath: any, component: any) => {
+    const formData = new FormData();
+
+    formData.append("component", component);
 
     try {
-      const response = await axios
-        .post(process.env.BASE_URL + "/api/tire/post", tireData)
-        .then((res) => {
-          console.log(res);
-          //! Add the redirect to the next page
-          router.push(`/inspection/battery/${inspectionID}`);
-        });
+      const file = await fetch(filePath);
+      const blob = await file.blob();
+
+      formData.append("file", blob, "image.jpg"); // Replace 'image.jpg' with the actual filename
+
+      const response = await axios.post(
+        "https://cat.akashshanmugaraj.com/api/upload",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        },
+      );
+
+      return response.data.publicURL; // Assuming your API response has a public URL
+    } catch (error) {
+      console.error("Error uploading image:", error);
+      throw error;
+    }
+  };
+
+  const handleSubmit = async () => {
+    try {
+      // Upload images and get their URLs
+      const contentType = "image/jpeg";
+
+      const LFfilename = "LFImage.jpeg";
+      const RFfilename = "RFImage.jpeg";
+      const LRfilename = "LRImage.jpeg";
+      const RRfilename = "RRImage.jpeg";
+
+      saveBase64ImageToFile(LFImage, LFfilename);
+      saveBase64ImageToFile(RFImage, RFfilename);
+      saveBase64ImageToFile(LRImage, LRfilename);
+      saveBase64ImageToFile(RRImage, RRfilename);
+
+      const LFImageURL = await uploadImage(LFfilename, "Tire");
+      const RFImageURL = await uploadImage(RFfilename, "Tire");
+      const LRImageURL = await uploadImage(LRfilename, "Tire");
+      const RRImageURL = await uploadImage(RRfilename, "Tire");
+
+      // Prepare tire data with the uploaded image URLs
+      const tireData = {
+        inspectionId: inspectionID,
+        tirePressureLeftFront: LFData.tirePressure,
+        tirePressureRightFront: RFData.tirePressure,
+        tireConditionLeftFront: LFData.tireCondition,
+        tireConditionRightFront: RFData.tireCondition,
+        tirePressureLeftRear: LRData.tirePressure,
+        tirePressureRightRear: RRData.tirePressure,
+        tireConditionLeftRear: LRData.tireCondition,
+        tireConditionRightRear: RRData.tireCondition,
+        tireOverallSummary: `${LFData.inspectorNotes}, ${RFData.inspectorNotes}, ${LRData.inspectorNotes}, ${RRData.inspectorNotes}`,
+        attachedImages: [LFImageURL, RFImageURL, LRImageURL, RRImageURL],
+      };
+
+      // Post tire data with the image URLs
+      const response = await axios.post(
+        "https://cat.akashshanmugaraj.com/api/tire/post",
+        tireData,
+      );
+
+      console.log(response);
+      router.push(`/inspection/battery/${inspectionID}`);
     } catch (error) {
       console.error("Error posting tire data:", error);
     }
@@ -99,6 +161,27 @@ const TiresInspection = ({ params }: { params: { inspection_id: string } }) => {
         setText={setRRText}
         text={RRtext}
       />
+      <div>
+        {/* Image Breakdown Preview */}
+        <div className="flex flex-row justify-between w-full">
+          <div className="flex flex-col items-center">
+            <img alt="Left Front Tire" src={LFImage} />
+            <p>Left Front</p>
+          </div>
+          <div className="flex flex-col items-center">
+            <img alt="Right Front Tire" src={RFImage} />
+            <p>Right Front</p>
+          </div>
+          <div className="flex flex-col items-center">
+            <img alt="Right Front Tire" src={RFImage} />
+            <p>Right Front</p>
+          </div>
+          <div className="flex flex-col items-center">
+            <img alt="Right Front Tire" src={RFImage} />
+            <p>Right Front</p>
+          </div>
+        </div>
+      </div>
 
       <Button color="danger" variant="light" onPress={handleSubmit}>
         Proceed to the next stage
