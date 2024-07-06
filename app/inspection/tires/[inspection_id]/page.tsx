@@ -66,7 +66,7 @@ const TiresInspection = ({ params }: { params: { inspection_id: string } }) => {
       formData.append("file", blob, "image.jpg"); // Replace 'image.jpg' with the actual filename
 
       const response = await axios.post(
-        "https://cat.akashshanmugaraj.com/api/upload",
+        "http://localhost:8080/api/upload",
         formData,
         {
           headers: {
@@ -119,7 +119,7 @@ const TiresInspection = ({ params }: { params: { inspection_id: string } }) => {
 
       // Post tire data with the image URLs
       const response = await axios.post(
-        "https://cat.akashshanmugaraj.com/api/tire/post",
+        "http://localhost:8080/api/tire/post",
         tireData,
       );
 

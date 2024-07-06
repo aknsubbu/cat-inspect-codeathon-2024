@@ -64,7 +64,7 @@ const BrakesInspection = ({ params }: { params: { inspection_id: string } }) => 
 
     try {
       const response = await axios
-        .post(process.env.BASE_URL + "/api/brakes/post", brakeData)
+        .post("http://localhost:8080" + "/api/brakes/post", brakeData)
         .then((res) => {
           console.log(res);
           router.push(`/inspection/engine/${inspectionID}`); // Redirect to the next page

@@ -37,7 +37,7 @@ const EngineInspection = ({ params }: { params: { inspection_id: string } }) => 
 
     try {
       const response = await axios
-        .post(process.env.BASE_URL + "/api/engine/post", engineInspectionData)
+        .post("http://localhost:8080" + "/api/engine/post", engineInspectionData)
         .then((res) => {
           console.log(res);
           //! Add the redirect to the next page

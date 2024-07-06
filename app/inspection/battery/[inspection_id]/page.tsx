@@ -41,7 +41,7 @@ const BatteryInspection = ({
 
     try {
       const response = await axios
-        .post(process.env.BASE_URL + "/api/battery/post", batteryInfo)
+        .post("http://localhost:8080" + "/api/battery/post", batteryInfo)
         .then((res) => {
           console.log(res);
           router.push(`/inspection/exterior/${inspectionID}`); // Redirect to the next page

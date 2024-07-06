@@ -38,7 +38,7 @@ const ExteriorInspection = ({
 
     try {
       const response = await axios
-        .post(process.env.BASE_URL + "/api/exterior/post", exteriorData)
+        .post("http://localhost:8080" + "/api/exterior/post", exteriorData)
         .then((res) => {
           console.log(res);
           router.push(`/inspection/brakes/${inspectionID}`); // Redirect to the next page
